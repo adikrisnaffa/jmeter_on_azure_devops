@@ -1,0 +1,29 @@
+name: JMeter Test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Java
+      run: |
+        choco install openjdk8
+
+    - name: Install JMeter
+      run: |
+       $version = "5.4.3"
+        $url = "https://downloads.apache.org/jmeter/binaries/apache-jmeter-$version.zip"
+        Invoke-WebRequest -Uri $url -OutFile "jmeter.zip"
+        Expand-Archive jmeter.zip -DestinationPath $Env:USERPROFILE
+        rm jmeter.zip
+
+        
+    - name: Run JMeter Test
+      run: |
+        & "E:\apache-jmeter-5.4.3\apache-jmeter-5.4.3\bin\jmeter.bat" -n -t vasanthshanmugam/apachedemo_01/SummaryReport.jmx -l vasanthshanmugam/apachedemo_01/results.jtl
+
